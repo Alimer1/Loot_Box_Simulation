@@ -1,3 +1,4 @@
+import javax.crypto.spec.PBEKeySpec;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,8 +21,11 @@ public class SimulationController implements ActionListener
     private Thread[] sim2Threads;
     private Thread[] progressChecker;
 
-    private SimulationMenu simMenu1 = new SimulationMenu("Standard Simulation");
-    private SimulationMenu simMenu2 = new SimulationMenu("Guilty Gear Simulation");
+    private JProgressBar simProgressBar1 = new JProgressBar(0,100);
+    private JProgressBar simProgressBar2 = new JProgressBar(0,100);
+
+    private SimulationMenu simMenu1 = new SimulationMenu("Standard Simulation",simProgressBar1);
+    private SimulationMenu simMenu2 = new SimulationMenu("Guilty Gear Simulation",simProgressBar2);
 
     private JPanel settingsPanel = new JPanel(new GridLayout(3,1));
     private JPanel settingsStartTopPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -100,11 +104,12 @@ public class SimulationController implements ActionListener
             sim1Threads[i].start();
             sim2Threads[i].start();
         }
+
         for(int i=0;i<simCount;i++)
         {
             try
             {
-                sim1Threads[i].join();
+                sim1Threads[i].join();  // I SHOULDN'T JOIN WHILE IN THE MAIN METHOD THAT CONTROLS THE UI SINCE THIS CAUSES THE WHOLE PROGRAM TO FREEZE WHILE WORKING I MUST SEPERATE THE CONTROLL PART OF THE PROGRAM AND THE UI PART OF IT.
                 sim2Threads[i].join();
             }
             catch(InterruptedException e)
@@ -112,6 +117,7 @@ public class SimulationController implements ActionListener
                 System.out.println(e);
             }
         }
+
         simMenu1.stop();
         simMenu2.stop();
 

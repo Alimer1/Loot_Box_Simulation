@@ -15,7 +15,7 @@ public class SimulationMenu implements Runnable
     private JPanel infoPanel = new JPanel(new BorderLayout());
 
     private JLabel simName;
-    private JProgressBar progressBar = new JProgressBar(0,100);
+    private JProgressBar progressBar;
     private JPanel outputPanel = new JPanel(new GridLayout(3,1));
     private JPanel outputPanelSegment1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
     private JPanel outputPanelSegment2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -30,9 +30,10 @@ public class SimulationMenu implements Runnable
     private JLabel output3Label = new JLabel("Standard Deviation:");
     private JLabel output3ValueLabel = new JLabel("0");
 
-    public SimulationMenu(String nName)
+    public SimulationMenu(String name,JProgressBar progressBar)
     {
-        name = nName;
+        this.name = name;
+        this.progressBar = progressBar;
         displaySetup();
     }
 
@@ -53,19 +54,18 @@ public class SimulationMenu implements Runnable
         exit = false;
         while(!exit)
         {
+            progress = (int) ((completeThreadCount*100)/simCount);
+            progressBar.setValue(progress);
+            System.out.println("Progress in "+name+" is: "+progress);
             try
             {
-                progress = (int) ((completeThreadCount*100)/simCount);
-                progressBar.setValue(progress);
-                System.out.println("Progress in "+name+" is: "+progress);
                 Thread.sleep(1000);
             }
             catch(Exception e)
-            {
-                System.out.println(e);
-            }
+            {}
         }
     }
+
     public void completeProgress()
     {
         progressBar.setValue(100);
